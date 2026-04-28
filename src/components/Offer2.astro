@@ -1,0 +1,278 @@
+---
+// Offer 2 — App UI/UX revamps + agent integrations
+// Unique visual: SVG dataflow diagram. Inputs (call/email/PDF/spreadsheet)
+// flow through an agent-assisted hub into structured outputs (CRM/Stripe/etc).
+// Animated particles travel along edges; nodes pulse.
+const inputs = [
+  { id: 'call', label: 'Phone call', y: 50 },
+  { id: 'email', label: 'Email thread', y: 130 },
+  { id: 'pdf', label: 'PDF / form', y: 210 },
+  { id: 'sheet', label: 'Spreadsheet', y: 290 },
+];
+const outputs = [
+  { id: 'crm', label: 'CRM record', y: 50 },
+  { id: 'pay', label: 'Invoice / payment', y: 130 },
+  { id: 'book', label: 'Booking / job', y: 210 },
+  { id: 'msg', label: 'Reply drafted', y: 290 },
+];
+---
+
+<section id="offer-2" class="relative py-28 sm:py-36 border-t border-line/60 overflow-hidden">
+  <div
+    aria-hidden="true"
+    class="absolute -top-6 left-2 sm:left-6 select-none pointer-events-none font-mono text-[18vw] sm:text-[14rem] leading-none font-bold text-white/[0.025] tracking-tighter"
+  >
+    02
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <!-- Visual on the LEFT this time -->
+      <div data-reveal class="lg:col-span-7 order-2 lg:order-1">
+        <div class="edge-card rounded-xl p-1">
+          <div class="rounded-[10px] bg-ink-3/80 overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-line/80 bg-ink-2/60">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-slate-500">
+                workflow · unstructured → structured
+              </span>
+              <span class="font-mono text-[11px] text-slate-500">live</span>
+            </div>
+
+            <div class="p-4 sm:p-6">
+              <svg
+                id="o2-svg"
+                viewBox="0 0 720 360"
+                class="w-full h-auto block"
+                role="img"
+                aria-label="Workflow diagram: unstructured inputs flowing through an agent-assisted hub into structured outputs"
+              >
+                <defs>
+                  <linearGradient id="o2-edge" x1="0" x2="1">
+                    <stop offset="0%" stop-color="#5eead4" stop-opacity="0" />
+                    <stop offset="20%" stop-color="#5eead4" stop-opacity="0.7" />
+                    <stop offset="80%" stop-color="#38bdf8" stop-opacity="0.7" />
+                    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+                  </linearGradient>
+                  <radialGradient id="o2-hub" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#5eead4" stop-opacity="0.45" />
+                    <stop offset="60%" stop-color="#5eead4" stop-opacity="0.08" />
+                    <stop offset="100%" stop-color="#5eead4" stop-opacity="0" />
+                  </radialGradient>
+                  <filter id="o2-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="b" />
+                    <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                </defs>
+
+                <!-- Background grid -->
+                <g opacity="0.18">
+                  {Array.from({ length: 18 }).map((_, i) => (
+                    <line x1={i * 40} y1="0" x2={i * 40} y2="360" stroke="#5eead4" stroke-width="0.5" />
+                  ))}
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <line x1="0" y1={i * 40} x2="720" y2={i * 40} stroke="#5eead4" stroke-width="0.5" />
+                  ))}
+                </g>
+
+                <!-- Hub aura -->
+                <circle cx="360" cy="180" r="110" fill="url(#o2-hub)" />
+
+                <!-- Edges from inputs to hub -->
+                {
+                  inputs.map((n) => (
+                    <path
+                      d={`M 140 ${n.y + 20} C 230 ${n.y + 20}, 280 200, 360 200`}
+                      stroke="url(#o2-edge)"
+                      stroke-width="1.2"
+                      fill="none"
+                      class="o2-edge"
+                      data-edge={`in-${n.id}`}
+                    />
+                  ))
+                }
+                <!-- Edges from hub to outputs -->
+                {
+                  outputs.map((n) => (
+                    <path
+                      d={`M 360 160 C 440 160, 490 ${n.y + 20}, 580 ${n.y + 20}`}
+                      stroke="url(#o2-edge)"
+                      stroke-width="1.2"
+                      fill="none"
+                      class="o2-edge"
+                      data-edge={`out-${n.id}`}
+                    />
+                  ))
+                }
+
+                <!-- Travelling particles (one per edge) -->
+                {
+                  inputs.map((n, i) => (
+                    <circle r="2.6" fill="#5eead4" filter="url(#o2-glow)">
+                      <animateMotion
+                        dur={`${2.4 + i * 0.2}s`}
+                        repeatCount="indefinite"
+                        begin={`${i * 0.35}s`}
+                        path={`M 140 ${n.y + 20} C 230 ${n.y + 20}, 280 200, 360 200`}
+                      />
+                    </circle>
+                  ))
+                }
+                {
+                  outputs.map((n, i) => (
+                    <circle r="2.6" fill="#38bdf8" filter="url(#o2-glow)">
+                      <animateMotion
+                        dur={`${2.4 + i * 0.2}s`}
+                        repeatCount="indefinite"
+                        begin={`${1.1 + i * 0.35}s`}
+                        path={`M 360 160 C 440 160, 490 ${n.y + 20}, 580 ${n.y + 20}`}
+                      />
+                    </circle>
+                  ))
+                }
+
+                <!-- Input nodes -->
+                {
+                  inputs.map((n) => (
+                    <g transform={`translate(40, ${n.y})`}>
+                      <rect width="100" height="40" rx="8" fill="#0a0f17" stroke="#1b2533" />
+                      <text x="50" y="24" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">
+                        {n.label}
+                      </text>
+                    </g>
+                  ))
+                }
+
+                <!-- Output nodes -->
+                {
+                  outputs.map((n) => (
+                    <g transform={`translate(580, ${n.y})`}>
+                      <rect width="100" height="40" rx="8" fill="#0a0f17" stroke="rgba(94,234,212,0.35)" />
+                      <text x="50" y="24" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">
+                        {n.label}
+                      </text>
+                    </g>
+                  ))
+                }
+
+                <!-- Hub -->
+                <g class="o2-hub">
+                  <circle cx="360" cy="180" r="46" fill="#0a0f17" stroke="#5eead4" stroke-opacity="0.55" />
+                  <circle cx="360" cy="180" r="46" fill="none" stroke="#5eead4" stroke-opacity="0.35">
+                    <animate attributeName="r" values="46;58;46" dur="3.6s" repeatCount="indefinite" />
+                    <animate attributeName="stroke-opacity" values="0.4;0;0.4" dur="3.6s" repeatCount="indefinite" />
+                  </circle>
+                  <text x="360" y="176" text-anchor="middle" fill="#5eead4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">
+                    AGENT
+                  </text>
+                  <text x="360" y="192" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="9">
+                    + human approval
+                  </text>
+                </g>
+              </svg>
+
+              <!-- Caption row -->
+              <div class="mt-4 grid grid-cols-3 gap-2 font-mono text-[11px] text-slate-400">
+                <div class="rounded border border-line bg-ink-2/60 px-3 py-2">
+                  <div class="text-slate-500 uppercase tracking-wider text-[10px]">In</div>
+                  <div class="mt-0.5 text-slate-200">unstructured</div>
+                </div>
+                <div class="rounded border border-signal/40 bg-signal/10 px-3 py-2">
+                  <div class="text-signal/80 uppercase tracking-wider text-[10px]">Process</div>
+                  <div class="mt-0.5 text-signal">propose · summarize · route</div>
+                </div>
+                <div class="rounded border border-line bg-ink-2/60 px-3 py-2">
+                  <div class="text-slate-500 uppercase tracking-wider text-[10px]">Out</div>
+                  <div class="mt-0.5 text-slate-200">structured · auditable</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy on the right -->
+      <div class="lg:col-span-5 order-1 lg:order-2">
+        <div data-reveal class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
+          <span class="h-px w-8 bg-signal/60"></span>
+          Offer · 02
+        </div>
+        <h2
+          data-reveal
+          style="--reveal-delay: 80ms"
+          class="mt-4 text-3xl sm:text-[40px] leading-[1.05] font-semibold tracking-tight text-white"
+        >
+          App revamps with agents
+          <span class="block text-slate-400 font-light">that actually do work.</span>
+        </h2>
+        <p data-reveal style="--reveal-delay: 140ms" class="mt-5 text-slate-400 leading-relaxed">
+          Modern customer portals, mobile-first internal tools, booking and quote
+          flows, support triage, and intake automation — wired into the systems
+          your team already uses. Not a fresh coat of paint. A working MVP with
+          real backend behaviour.
+        </p>
+
+        <ul data-reveal style="--reveal-delay: 200ms" class="mt-7 grid grid-cols-2 gap-2 font-mono text-[11.5px]">
+          {
+            ['Stripe', 'Xero / MYOB', 'HubSpot', 'WhatsApp / SMS', 'ServiceM8', 'Shopify', 'Google / M365', 'Custom APIs'].map((t) => (
+              <li class="rounded border border-line bg-ink-2/60 px-2.5 py-1.5 text-slate-300 hover:border-signal/40 hover:text-white transition-colors">
+                {t}
+              </li>
+            ))
+          }
+        </ul>
+
+        <p data-reveal style="--reveal-delay: 260ms" class="mt-7 text-xs text-slate-500 leading-relaxed border-l border-line/80 pl-4">
+          Agents propose, draft, summarize and route. Sensitive actions stay
+          approval-based unless you explicitly want full automation. Auth, audit
+          logs, backups, and runbooks ship with every build.
+        </p>
+
+        <a
+          href="#contact"
+          data-reveal
+          style="--reveal-delay: 320ms"
+          class="mt-8 inline-flex items-center gap-2 text-signal hover:text-white transition-colors text-sm font-medium group"
+        >
+          Scope a workflow MVP
+          <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .o2-edge {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    transition: stroke-dashoffset 1400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .o2-edges-active .o2-edge {
+    stroke-dashoffset: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .o2-edge { transition: none; stroke-dashoffset: 0; }
+    #o2-svg animateMotion, #o2-svg animate { display: none; }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('offer-2');
+    if (!root) return;
+    const svg = root.querySelector<SVGElement>('#o2-svg');
+    if (!svg) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            svg.classList.add('o2-edges-active');
+            io.disconnect();
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+    io.observe(root);
+  })();
+</script>

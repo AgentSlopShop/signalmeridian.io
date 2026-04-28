@@ -1,0 +1,307 @@
+---
+// Offer 1 — Infrastructure cost reduction
+// Unique visual: live "billing console" where AWS line items animate down
+// on scroll, plus a counter that ticks the monthly bill from 100% → ~45%.
+const lineItems = [
+  { svc: 'EC2 / compute',         was: 18420, now:  6210 },
+  { svc: 'RDS Aurora',            was:  9870, now:  4120 },
+  { svc: 'NAT Gateway + egress',  was:  6240, now:   480 },
+  { svc: 'S3 + lifecycle',        was:  3110, now:  2640 },
+  { svc: 'CloudWatch + logs',     was:  4290, now:   910 },
+  { svc: 'OpenSearch + queues',   was:  3870, now:  1180 },
+  { svc: 'Build + CI runners',    was:  2170, now:   430 },
+  { svc: 'Misc managed services', was:  1980, now:   880 },
+];
+const totalWas = lineItems.reduce((a, b) => a + b.was, 0);
+const totalNow = lineItems.reduce((a, b) => a + b.now, 0);
+const fmt = (n: number) => '$' + n.toLocaleString('en-US');
+
+const placementColors: Record<string, string> = {
+  keep: 'bg-slate-500/30 border-slate-500/40',
+  optimize: 'bg-sky-400/20 border-sky-400/40',
+  hybrid: 'bg-violet-400/20 border-violet-400/40',
+  move: 'bg-signal/25 border-signal/50',
+};
+const placementBuckets = ['keep', 'move', 'hybrid', 'optimize', 'keep', 'move'];
+const placementCells = Array.from({ length: 30 }, (_, i) => placementBuckets[i % placementBuckets.length]);
+---
+
+<section id="offer-1" class="relative py-28 sm:py-36 border-t border-line/60 overflow-hidden">
+  <!-- Number watermark -->
+  <div
+    aria-hidden="true"
+    class="absolute -top-6 right-2 sm:right-6 select-none pointer-events-none font-mono text-[18vw] sm:text-[14rem] leading-none font-bold text-white/[0.025] tracking-tighter"
+  >
+    01
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <!-- Copy -->
+      <div class="lg:col-span-5">
+        <div data-reveal class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
+          <span class="h-px w-8 bg-signal/60"></span>
+          Offer · 01
+        </div>
+        <h2
+          data-reveal
+          style="--reveal-delay: 80ms"
+          class="mt-4 text-3xl sm:text-[40px] leading-[1.05] font-semibold tracking-tight text-white"
+        >
+          Cut your server bill in half.
+          <span class="block text-slate-400 font-light">
+            Without breaking what works.
+          </span>
+        </h2>
+        <p data-reveal style="--reveal-delay: 140ms" class="mt-5 text-slate-400 leading-relaxed">
+          For mature platforms with real cloud spend, we routinely find
+          <span class="text-signal font-medium">50%+ infrastructure savings</span>
+          when steady workloads are moved off AWS into bare-metal or hybrid
+          setups — but only where the workload, uptime requirements, and
+          operational risk make sense.
+        </p>
+
+        <ul data-reveal style="--reveal-delay: 200ms" class="mt-7 space-y-3 text-sm">
+          {
+            [
+              ['Diagnostic', 'Read-only billing review and architecture walkthrough. Cost map by service, environment, and product area.'],
+              ['Placement', 'Workload matrix: keep cloud, optimize in cloud, move to bare metal, hybrid candidate, or do not touch.'],
+              ['Execution', 'Phased migration with rollback, monitoring, runbooks, and verified savings — not a slide deck.'],
+            ].map(([k, v]) => (
+              <li class="flex gap-3">
+                <span class="mt-1 font-mono text-[10px] uppercase tracking-wider text-signal/80 border border-signal/40 rounded px-1.5 py-0.5 shrink-0 bg-signal/5">
+                  {k}
+                </span>
+                <span class="text-slate-300 leading-relaxed">{v}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p data-reveal style="--reveal-delay: 260ms" class="mt-7 text-xs text-slate-500 leading-relaxed border-l border-line/80 pl-4">
+          We never promise guaranteed savings before reviewing your billing and
+          architecture. Diagnostic first; recommendation second; execution only
+          where the numbers and risk profile justify it.
+        </p>
+
+        <a
+          href="#contact"
+          data-reveal
+          style="--reveal-delay: 320ms"
+          class="mt-8 inline-flex items-center gap-2 text-signal hover:text-white transition-colors text-sm font-medium group"
+        >
+          Request an AWS cost review
+          <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+
+      <!-- Billing console visual -->
+      <div data-reveal style="--reveal-delay: 200ms" class="lg:col-span-7">
+        <div class="edge-card rounded-xl overflow-hidden">
+          <!-- Header -->
+          <div class="flex items-center justify-between px-4 py-2.5 border-b border-line/80 bg-ink-2/60">
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-rose-400/70"></span>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-slate-500">
+                aws · monthly billing · production
+              </span>
+            </div>
+            <span id="o1-period" class="font-mono text-[11px] text-slate-500">period: before</span>
+          </div>
+
+          <!-- Big counter -->
+          <div class="px-5 sm:px-7 pt-6 pb-2 flex items-end justify-between gap-4 flex-wrap">
+            <div>
+              <div class="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500">monthly spend</div>
+              <div class="mt-1 flex items-baseline gap-3">
+                <span
+                  id="o1-counter"
+                  data-from={totalWas}
+                  data-to={totalNow}
+                  class="font-mono text-4xl sm:text-5xl font-semibold text-white tabular-nums tracking-tight text-glow"
+                >
+                  {fmt(totalWas)}
+                </span>
+                <span id="o1-delta" class="font-mono text-sm text-slate-500 tabular-nums">
+                  &nbsp;
+                </span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                data-mode="before"
+                class="o1-toggle font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded border border-line bg-ink-2/60 text-slate-300 hover:border-signal/50 hover:text-white transition-colors"
+              >
+                Before
+              </button>
+              <button
+                type="button"
+                data-mode="after"
+                class="o1-toggle font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 rounded border border-signal/50 bg-signal/10 text-signal hover:bg-signal/20 transition-colors"
+              >
+                After
+              </button>
+            </div>
+          </div>
+
+          <!-- Line items -->
+          <ul id="o1-rows" class="px-5 sm:px-7 pb-6 pt-3 divide-y divide-line/60">
+            {
+              lineItems.map((it) => (
+                <li
+                  class="grid grid-cols-12 items-center gap-3 py-2.5 font-mono text-[12.5px]"
+                  data-was={it.was}
+                  data-now={it.now}
+                >
+                  <span class="col-span-4 sm:col-span-3 text-slate-300 truncate">{it.svc}</span>
+                  <div class="col-span-5 sm:col-span-7 relative h-2 rounded bg-ink-3/80 overflow-hidden">
+                    <span class="o1-bar absolute inset-y-0 left-0 rounded bg-gradient-to-r from-signal/80 to-sky-400/80" style="width: 100%"></span>
+                  </div>
+                  <span class="o1-amt col-span-3 sm:col-span-2 text-right tabular-nums text-slate-200">
+                    {fmt(it.was)}
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <!-- Workload placement matrix -->
+          <div class="border-t border-line/80 bg-ink-2/40 px-5 sm:px-7 py-4">
+            <div class="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 mb-3">
+              workload placement matrix
+            </div>
+            <div class="grid grid-cols-5 gap-1.5">
+              {
+                placementCells.map((b, i) => (
+                  <span
+                    class={`h-5 sm:h-6 rounded border ${placementColors[b]} o1-cell`}
+                    style={`animation-delay: ${i * 18}ms`}
+                    title={b}
+                  />
+                ))
+              }
+            </div>
+            <div class="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 font-mono text-[10.5px] text-slate-400">
+              <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-signal/40 border border-signal/60"></span>move → bare metal</span>
+              <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-violet-400/40 border border-violet-400/60"></span>hybrid</span>
+              <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-sky-400/40 border border-sky-400/60"></span>optimize in cloud</span>
+              <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-sm bg-slate-500/40 border border-slate-500/60"></span>keep as-is</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .o1-bar {
+    transition: width 1100ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .o1-cell {
+    opacity: 0;
+    transform: scale(0.6);
+    animation: o1-cell-in 600ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+    animation-play-state: paused;
+  }
+  .o1-cells-active .o1-cell {
+    animation-play-state: running;
+  }
+  @keyframes o1-cell-in {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .o1-bar { transition: none; }
+    .o1-cell { animation: none; opacity: 1; transform: none; }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('offer-1');
+    if (!root) return;
+    const counter = root.querySelector<HTMLElement>('#o1-counter');
+    const delta = root.querySelector<HTMLElement>('#o1-delta');
+    const period = root.querySelector<HTMLElement>('#o1-period');
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('#o1-rows li'));
+    const matrix = root.querySelector<HTMLElement>('.grid.grid-cols-5');
+    if (!counter || !delta || !period) return;
+
+    const fromTotal = Number(counter.dataset.from || 0);
+    const toTotal = Number(counter.dataset.to || 0);
+    const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+    let mode: 'before' | 'after' = 'before';
+
+    const animateNumber = (from: number, to: number, ms: number) => {
+      const start = performance.now();
+      const step = (t: number) => {
+        const k = Math.min(1, (t - start) / ms);
+        const e = 1 - Math.pow(1 - k, 3);
+        counter.textContent = fmt(from + (to - from) * e);
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    const apply = (next: 'before' | 'after') => {
+      mode = next;
+      period.textContent = `period: ${next}`;
+      const total = next === 'before' ? fromTotal : toTotal;
+      const prev = Number((counter.textContent || '0').replace(/[^0-9.]/g, '')) || fromTotal;
+      animateNumber(prev, total, 900);
+
+      rows.forEach((li) => {
+        const was = Number(li.dataset.was || 0);
+        const now = Number(li.dataset.now || 0);
+        const v = next === 'before' ? was : now;
+        const pct = (v / Math.max(was, 1)) * 100;
+        const bar = li.querySelector<HTMLElement>('.o1-bar');
+        const amt = li.querySelector<HTMLElement>('.o1-amt');
+        if (bar) bar.style.width = `${pct}%`;
+        if (amt) amt.textContent = fmt(v);
+      });
+
+      if (next === 'after') {
+        const saved = fromTotal - toTotal;
+        const pct = Math.round((saved / fromTotal) * 100);
+        delta.innerHTML = `<span class="text-signal">− ${fmt(saved)}</span> · ${pct}% saved`;
+      } else {
+        delta.innerHTML = '&nbsp;';
+      }
+
+      root.querySelectorAll<HTMLButtonElement>('.o1-toggle').forEach((b) => {
+        const active = b.dataset.mode === next;
+        b.classList.toggle('border-signal/50', active);
+        b.classList.toggle('bg-signal/10', active);
+        b.classList.toggle('text-signal', active);
+        b.classList.toggle('border-line', !active);
+        b.classList.toggle('text-slate-300', !active);
+        b.classList.toggle('bg-ink-2/60', !active);
+      });
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('.o1-toggle').forEach((b) => {
+      b.addEventListener('click', () => apply((b.dataset.mode as 'before' | 'after') || 'before'));
+    });
+
+    // Reveal: trigger "after" once visible, with a small dwell on "before"
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            matrix?.parentElement?.parentElement?.classList.add('o1-cells-active');
+            // Start at before (already), then animate to after for impact
+            setTimeout(() => apply('after'), 700);
+            io.disconnect();
+          }
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(root);
+  })();
+</script>

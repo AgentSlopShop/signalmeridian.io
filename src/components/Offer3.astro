@@ -1,0 +1,311 @@
+---
+// Offer 3 — Web3 technical execution + developer-program support
+// Unique visual: live force-graph "constellation" rendered to <canvas>.
+// A central foundation node connects to cohort/builder nodes with pulses
+// running along edges. Drifts and reacts to mouse.
+const services = [
+  ['Office hours', 'Weekly technical office hours for cohort and grantee teams.'],
+  ['Architecture review', 'Honest reads on builder architectures, with concrete next moves.'],
+  ['Milestone review', 'Independent technical review of grant milestones and deliverables.'],
+  ['Sample apps + SDKs', 'Reference integrations, starter kits, and integration guides.'],
+  ['Hackathon support', 'Technical judging, mentoring, and post-event triage.'],
+  ['Integration rescue', 'Unblock teams stuck on wallets, indexing, contracts, or infra.'],
+];
+---
+
+<section id="offer-3" class="relative py-28 sm:py-36 border-t border-line/60 overflow-hidden">
+  <div
+    aria-hidden="true"
+    class="absolute -top-6 right-2 sm:right-6 select-none pointer-events-none font-mono text-[18vw] sm:text-[14rem] leading-none font-bold text-white/[0.025] tracking-tighter"
+  >
+    03
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <!-- Copy -->
+      <div class="lg:col-span-5">
+        <div data-reveal class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
+          <span class="h-px w-8 bg-signal/60"></span>
+          Offer · 03
+        </div>
+        <h2
+          data-reveal
+          style="--reveal-delay: 80ms"
+          class="mt-4 text-3xl sm:text-[40px] leading-[1.05] font-semibold tracking-tight text-white"
+        >
+          The technical operator
+          <span class="block text-slate-400 font-light">behind your developer program.</span>
+        </h2>
+        <p data-reveal style="--reveal-delay: 140ms" class="mt-5 text-slate-400 leading-relaxed">
+          For protocol foundations, ecosystem funds, grant programs and
+          accelerators: senior technical execution that crosses code, infra,
+          product and developer relations. We act as the technical layer behind
+          your program — so non-technical staff have credible answers and
+          builder teams have someone who can actually unblock them.
+        </p>
+
+        <div data-reveal style="--reveal-delay: 200ms" class="mt-7 grid sm:grid-cols-2 gap-2.5">
+          {
+            services.map(([t, b]) => (
+              <div class="rounded-lg border border-line bg-ink-2/60 p-3 hover:border-signal/40 transition-colors group">
+                <div class="font-mono text-[10.5px] uppercase tracking-[0.18em] text-signal/80">
+                  {t}
+                </div>
+                <div class="mt-1 text-[12.5px] text-slate-300 leading-relaxed">
+                  {b}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <p data-reveal style="--reveal-delay: 260ms" class="mt-7 text-xs text-slate-500 leading-relaxed border-l border-line/80 pl-4">
+          Direct experience across multiple blockchain ecosystems — developer
+          relations, grant programs, wallet and account flows, indexing, RPC
+          and node infrastructure, and cloud-to-bare-metal migration for web3
+          infrastructure.
+        </p>
+
+        <a
+          href="#contact"
+          data-reveal
+          style="--reveal-delay: 320ms"
+          class="mt-8 inline-flex items-center gap-2 text-signal hover:text-white transition-colors text-sm font-medium group"
+        >
+          Talk about your program
+          <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+
+      <!-- Constellation visual -->
+      <div data-reveal style="--reveal-delay: 200ms" class="lg:col-span-7">
+        <div class="edge-card rounded-xl p-1">
+          <div class="rounded-[10px] bg-ink-3/80 overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-line/80 bg-ink-2/60">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-slate-500">
+                program graph · cohort + ecosystem
+              </span>
+              <span class="font-mono text-[11px] text-signal flex items-center gap-1.5">
+                <span class="relative flex h-1.5 w-1.5">
+                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60"></span>
+                  <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal"></span>
+                </span>
+                live
+              </span>
+            </div>
+            <div class="relative aspect-[16/11] sm:aspect-[16/10]">
+              <canvas id="o3-graph" class="absolute inset-0 w-full h-full"></canvas>
+              <!-- Legend overlay -->
+              <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between font-mono text-[10.5px] text-slate-400">
+                <div class="flex flex-col gap-1">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="h-2 w-2 rounded-full bg-signal shadow-[0_0_8px_#5eead4]"></span>
+                    foundation / program
+                  </span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="h-2 w-2 rounded-full bg-sky-300/80"></span>
+                    builder / cohort team
+                  </span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="h-2 w-2 rounded-full bg-amber-300/70"></span>
+                    blocked · needs review
+                  </span>
+                </div>
+                <div class="hidden sm:flex flex-col items-end gap-0.5">
+                  <span><span class="text-slate-500">teams tracked</span> <span id="o3-teams" class="text-slate-200">14</span></span>
+                  <span><span class="text-slate-500">milestones reviewed</span> <span id="o3-ms" class="text-slate-200">42</span></span>
+                  <span><span class="text-slate-500">unblocked this week</span> <span id="o3-unblock" class="text-signal">7</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const canvas = document.getElementById('o3-graph') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let w = 0, h = 0;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    type Node = { x: number; y: number; vx: number; vy: number; r: number; kind: 'hub' | 'team' | 'blocked'; phase: number };
+    let nodes: Node[] = [];
+    let edges: [number, number][] = [];
+
+    const build = () => {
+      nodes = [];
+      edges = [];
+      const cx = w / 2, cy = h / 2;
+      // Hub
+      nodes.push({ x: cx, y: cy, vx: 0, vy: 0, r: 9, kind: 'hub', phase: Math.random() * Math.PI * 2 });
+      // Ring of teams
+      const N = 14;
+      for (let i = 0; i < N; i++) {
+        const a = (i / N) * Math.PI * 2 + Math.random() * 0.15;
+        const radius = Math.min(w, h) * (0.30 + Math.random() * 0.12);
+        const x = cx + Math.cos(a) * radius;
+        const y = cy + Math.sin(a) * radius;
+        const blocked = i === 3 || i === 9; // a couple flagged
+        nodes.push({
+          x, y,
+          vx: (Math.random() - 0.5) * 0.08,
+          vy: (Math.random() - 0.5) * 0.08,
+          r: 3.2 + Math.random() * 1.6,
+          kind: blocked ? 'blocked' : 'team',
+          phase: Math.random() * Math.PI * 2,
+        });
+        edges.push([0, i + 1]);
+      }
+      // A few inter-team edges (peer collabs)
+      for (let k = 0; k < 6; k++) {
+        const a = 1 + Math.floor(Math.random() * N);
+        let b = 1 + Math.floor(Math.random() * N);
+        if (b === a) b = ((b) % N) + 1;
+        edges.push([a, b]);
+      }
+    };
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      w = rect.width; h = rect.height;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      build();
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+
+    const mouse = { x: -9999, y: -9999 };
+    canvas.addEventListener('mousemove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+    });
+    canvas.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+
+    let t = 0;
+    let raf = 0;
+    let running = true;
+
+    const draw = () => {
+      t += reduce ? 0 : 0.012;
+      ctx.clearRect(0, 0, w, h);
+
+      // Subtle grid
+      ctx.strokeStyle = 'rgba(94,234,212,0.05)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 36) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+      for (let y = 0; y < h; y += 36) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+      // Drift teams gently
+      if (!reduce) {
+        for (let i = 1; i < nodes.length; i++) {
+          const n = nodes[i];
+          n.x += n.vx; n.y += n.vy;
+          // Mouse repulsion
+          const dx = n.x - mouse.x, dy = n.y - mouse.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 90 * 90) {
+            const f = (90 - Math.sqrt(d2)) * 0.012;
+            const ang = Math.atan2(dy, dx);
+            n.x += Math.cos(ang) * f; n.y += Math.sin(ang) * f;
+          }
+          // Spring back toward original ring
+          const cx = w / 2, cy = h / 2;
+          const ang = Math.atan2(n.y - cy, n.x - cx);
+          const targetR = Math.min(w, h) * 0.35;
+          const tx = cx + Math.cos(ang) * targetR;
+          const ty = cy + Math.sin(ang) * targetR;
+          n.x += (tx - n.x) * 0.008;
+          n.y += (ty - n.y) * 0.008;
+        }
+      }
+
+      // Edges
+      for (const [a, b] of edges) {
+        const A = nodes[a], B = nodes[b];
+        ctx.beginPath();
+        ctx.moveTo(A.x, A.y);
+        ctx.lineTo(B.x, B.y);
+        ctx.strokeStyle = a === 0 ? 'rgba(94,234,212,0.20)' : 'rgba(148,163,184,0.10)';
+        ctx.lineWidth = a === 0 ? 1 : 0.8;
+        ctx.stroke();
+      }
+
+      // Pulses along hub→team edges
+      for (let i = 1; i < nodes.length; i++) {
+        const A = nodes[0], B = nodes[i];
+        const phase = ((t * 0.45) + i * 0.21) % 1;
+        const px = A.x + (B.x - A.x) * phase;
+        const py = A.y + (B.y - A.y) * phase;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.8, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(94,234,212,0.85)';
+        ctx.shadowColor = 'rgba(94,234,212,0.7)';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Nodes
+      for (const n of nodes) {
+        const pulse = 1 + Math.sin(t * 2 + n.phase) * 0.12;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
+        if (n.kind === 'hub') {
+          ctx.fillStyle = '#5eead4';
+          ctx.shadowColor = 'rgba(94,234,212,0.8)';
+          ctx.shadowBlur = 18;
+        } else if (n.kind === 'blocked') {
+          ctx.fillStyle = '#fcd34d';
+          ctx.shadowColor = 'rgba(252,211,77,0.55)';
+          ctx.shadowBlur = 10;
+        } else {
+          ctx.fillStyle = 'rgba(125,211,252,0.9)';
+          ctx.shadowColor = 'rgba(125,211,252,0.4)';
+          ctx.shadowBlur = 8;
+        }
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Hub ring
+      const hub = nodes[0];
+      ctx.beginPath();
+      ctx.arc(hub.x, hub.y, 18 + Math.sin(t * 1.6) * 2, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(94,234,212,0.35)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      if (running) raf = requestAnimationFrame(draw);
+    };
+    draw();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { running = false; cancelAnimationFrame(raf); }
+      else { running = true; raf = requestAnimationFrame(draw); }
+    });
+
+    // Pause when offscreen for perf
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) {
+        if (e.isIntersecting) {
+          if (!running) { running = true; raf = requestAnimationFrame(draw); }
+        } else {
+          running = false; cancelAnimationFrame(raf);
+        }
+      }
+    }, { threshold: 0.05 });
+    io.observe(canvas);
+  })();
+</script>

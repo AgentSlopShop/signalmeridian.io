@@ -1,0 +1,118 @@
+---
+const team = [
+  {
+    name: 'Shen Morincome',
+    role: 'Chief Executive Officer',
+    location: 'AU',
+    focus: ['Engagement strategy', 'Discovery + scoping', 'Commercial structure'],
+    bio: 'Leads engagements end-to-end. Sits across discovery, scoping, and the commercial shape of every piece of work we take on.',
+  },
+  {
+    name: 'Mark Ibanez',
+    role: 'Chief Technology Officer',
+    location: 'PH',
+    focus: ['Backend + infrastructure', 'Migration + recovery', 'Hands-on execution'],
+    bio: 'Owns deep technical execution — infrastructure, backend systems, and the rescue work that defines our practice.',
+  },
+];
+---
+
+<section id="team" class="relative py-28 sm:py-36 border-t border-line/60 overflow-hidden">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="grid lg:grid-cols-12 gap-10 items-end">
+      <div class="lg:col-span-7">
+        <p data-reveal class="font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">// the team</p>
+        <h2
+          data-reveal
+          style="--reveal-delay: 80ms"
+          class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white"
+        >
+          Two engineers.
+          <span class="text-slate-400 font-light">Fifty years combined.</span>
+        </h2>
+      </div>
+      <p data-reveal style="--reveal-delay: 140ms" class="lg:col-span-5 text-slate-400 leading-relaxed text-sm">
+        Intentionally lean. The people you talk to are the people doing the
+        work. Australia · Philippines · global delivery.
+      </p>
+    </div>
+
+    <div class="mt-14 grid sm:grid-cols-2 gap-4">
+      {
+        team.map((m, i) => (
+          <article
+            data-reveal
+            style={`--reveal-delay: ${i * 100}ms`}
+            class="team-card relative overflow-hidden rounded-2xl border border-line bg-ink-2/40 p-7"
+          >
+            <div class="team-glow pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500" />
+
+            <div class="relative">
+              <div class="flex items-start justify-between">
+                <div class="font-mono text-[10.5px] uppercase tracking-[0.2em] text-slate-500">
+                  ID · {String(i + 1).padStart(3, '0')} · {m.location}
+                </div>
+                <div class="flex items-center gap-1.5 font-mono text-[10.5px] text-signal">
+                  <span class="relative flex h-1.5 w-1.5">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60" />
+                    <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+                  </span>
+                  online
+                </div>
+              </div>
+
+              <div class="mt-7">
+                <h3 class="text-2xl font-semibold tracking-tight text-white">{m.name}</h3>
+                <div class="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-signal/80">
+                  {m.role}
+                </div>
+              </div>
+
+              <p class="mt-5 text-sm text-slate-400 leading-relaxed max-w-md">{m.bio}</p>
+
+              <ul class="mt-6 flex flex-wrap gap-1.5">
+                {m.focus.map((f) => (
+                  <li class="font-mono text-[11px] px-2.5 py-1 rounded border border-line bg-ink-3/60 text-slate-300">
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <svg
+              aria-hidden="true"
+              class="pointer-events-none absolute -bottom-6 -right-6 h-40 w-40 text-signal/15"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="0.6" />
+              <circle cx="50" cy="50" r="32" stroke="currentColor" stroke-width="0.6" />
+              <circle cx="50" cy="50" r="20" stroke="currentColor" stroke-width="0.6" />
+              <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" stroke-width="0.6" />
+              <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" stroke-width="0.6" />
+            </svg>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .team-card { transition: border-color 250ms ease, transform 250ms ease; }
+  .team-card:hover { border-color: rgba(94, 234, 212, 0.35); transform: translateY(-2px); }
+  .team-glow {
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(94, 234, 212, 0.10), transparent 60%);
+  }
+  .team-card:hover .team-glow { opacity: 1; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.team-card').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      card.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  });
+</script>

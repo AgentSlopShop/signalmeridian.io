@@ -1,0 +1,325 @@
+---
+const tags = [
+  'Repo & secret recovery',
+  'Cloud → bare metal',
+  'Backend rescue',
+  'Blockchain & wallets',
+  'DevOps & security',
+  'Technical due diligence',
+  '24/7 critical infra',
+];
+---
+
+<section class="relative overflow-hidden pt-32 pb-24 sm:pt-40 sm:pb-32">
+  <!-- Layered backgrounds -->
+  <div class="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" aria-hidden="true"></div>
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background: radial-gradient(900px 500px at 70% 10%, rgba(56,189,248,0.10), transparent 60%), radial-gradient(700px 500px at 15% 90%, rgba(94,234,212,0.10), transparent 60%);"
+    aria-hidden="true"
+  >
+  </div>
+  <canvas
+    id="meridianCanvas"
+    class="absolute inset-0 w-full h-full pointer-events-none opacity-90"
+    aria-hidden="true"></canvas>
+
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      <div class="lg:col-span-7">
+        <div data-reveal class="inline-flex items-center gap-2 rounded-full border border-line bg-ink-2/70 px-3 py-1 text-xs font-mono text-slate-300">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-60"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-signal"></span>
+          </span>
+          Available — taking on a small number of new engagements
+        </div>
+
+        <h1
+          data-reveal
+          style="--reveal-delay: 80ms"
+          class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white leading-[1.05] text-glow"
+        >
+          Senior technical assistance
+          <span class="block text-slate-300 font-light">
+            for systems under <span class="relative whitespace-nowrap text-signal font-medium">
+              pressure
+              <svg
+                viewBox="0 0 220 12"
+                class="absolute left-0 right-0 -bottom-2 w-full h-2 text-signal/70"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 6 Q 30 1, 60 6 T 120 6 T 180 6 T 218 6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>.
+          </span>
+        </h1>
+
+        <p
+          data-reveal
+          style="--reveal-delay: 160ms"
+          class="mt-6 max-w-xl text-base sm:text-lg text-slate-400 leading-relaxed"
+        >
+          A senior, two-engineer technical practice. We cut server costs by
+          <span class="text-signal font-medium">50%+</span> moving steady
+          workloads off AWS, build modern app and agent workflows for
+          operators, and act as the technical operator behind web3 developer
+          programs.
+        </p>
+
+        <div data-reveal style="--reveal-delay: 240ms" class="mt-8 flex flex-wrap items-center gap-3">
+          <a
+            href="#contact"
+            class="inline-flex items-center gap-2 rounded-md bg-signal px-5 py-2.5 text-sm font-semibold text-ink shadow-[0_0_0_1px_rgba(94,234,212,0.4),0_8px_32px_-8px_rgba(94,234,212,0.55)] hover:bg-white hover:text-ink transition-colors"
+          >
+            Start a conversation
+            <svg viewBox="0 0 16 16" fill="none" class="h-4 w-4" aria-hidden="true">
+              <path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <a
+            href="#offer-1"
+            class="inline-flex items-center gap-2 rounded-md border border-line bg-ink-2/60 px-5 py-2.5 text-sm font-medium text-slate-200 hover:border-signal/50 hover:text-white transition-colors"
+          >
+            See what we do
+          </a>
+        </div>
+
+        <ul data-reveal style="--reveal-delay: 320ms" class="mt-10 flex flex-wrap gap-2">
+          {tags.map((t) => <li class="tag">{t}</li>)}
+        </ul>
+      </div>
+
+      <!-- Console panel -->
+      <div data-reveal style="--reveal-delay: 200ms" class="lg:col-span-5">
+        <div class="edge-card rounded-xl p-1 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)]">
+          <div class="rounded-[10px] bg-ink-3/90 overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-line/80">
+              <div class="flex items-center gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-rose-400/70"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-300/70"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/70"></span>
+              </div>
+              <span class="font-mono text-[11px] tracking-wider uppercase text-slate-500">
+                signal-meridian — engagement.log
+              </span>
+              <span class="font-mono text-[11px] text-slate-500">tty/01</span>
+            </div>
+            <pre id="consoleStream" class="font-mono text-[12.5px] leading-[1.7] text-slate-300 p-4 h-[320px] overflow-hidden whitespace-pre-wrap"></pre>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center justify-between px-1 text-[11px] font-mono text-slate-500">
+          <span>uptime <span class="text-signal">99.97%</span></span>
+          <span>regions: AU · APAC · global</span>
+          <span>response &lt; 24h</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ---- Animated meridian / signal canvas ----
+  (() => {
+    const canvas = document.getElementById('meridianCanvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let w = 0,
+      h = 0,
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    const mouse = { x: 0.5, y: 0.5, active: false };
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    canvas.parentElement?.addEventListener('mousemove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = (e.clientX - r.left) / r.width;
+      mouse.y = (e.clientY - r.top) / r.height;
+      mouse.active = true;
+    });
+    canvas.parentElement?.addEventListener('mouseleave', () => {
+      mouse.active = false;
+    });
+
+    // Noise particles drifting
+    const N = 70;
+    const dots = Array.from({ length: N }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.0006,
+      vy: (Math.random() - 0.5) * 0.0006,
+      r: Math.random() * 1.4 + 0.4,
+    }));
+
+    let t = 0;
+    let raf = 0;
+
+    const draw = () => {
+      t += reduce ? 0 : 0.008;
+      ctx.clearRect(0, 0, w, h);
+
+      // Drifting noise particles
+      ctx.fillStyle = 'rgba(148,163,184,0.35)';
+      for (const d of dots) {
+        if (!reduce) {
+          d.x += d.vx;
+          d.y += d.vy;
+          if (d.x < 0 || d.x > 1) d.vx *= -1;
+          if (d.y < 0 || d.y > 1) d.vy *= -1;
+        }
+        ctx.beginPath();
+        ctx.arc(d.x * w, d.y * h, d.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // The meridian: a clean signal curve cutting through noise
+      const my = h * (mouse.active ? mouse.y : 0.55);
+      const amp = h * 0.06;
+
+      // Soft glow band
+      const grad = ctx.createLinearGradient(0, my - amp * 2, 0, my + amp * 2);
+      grad.addColorStop(0, 'rgba(94,234,212,0)');
+      grad.addColorStop(0.5, 'rgba(94,234,212,0.10)');
+      grad.addColorStop(1, 'rgba(94,234,212,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, my - amp * 2, w, amp * 4);
+
+      // Curve
+      ctx.beginPath();
+      const steps = Math.max(60, Math.floor(w / 8));
+      for (let i = 0; i <= steps; i++) {
+        const x = (i / steps) * w;
+        const phase = (i / steps) * Math.PI * 4 + t * 2.2;
+        const decay = Math.sin((i / steps) * Math.PI); // taper at edges
+        const y = my + Math.sin(phase) * amp * decay + Math.sin(phase * 0.5 + t) * amp * 0.4 * decay;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = 'rgba(94,234,212,0.95)';
+      ctx.shadowColor = 'rgba(94,234,212,0.55)';
+      ctx.shadowBlur = 18;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Pulse marker travelling along the curve
+      const px = ((t * 0.18) % 1) * w;
+      const phase = (px / w) * Math.PI * 4 + t * 2.2;
+      const decay = Math.sin((px / w) * Math.PI);
+      const py = my + Math.sin(phase) * amp * decay + Math.sin(phase * 0.5 + t) * amp * 0.4 * decay;
+      ctx.beginPath();
+      ctx.arc(px, py, 3.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#5eead4';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(px, py, 10, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(94,234,212,0.18)';
+      ctx.fill();
+
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelAnimationFrame(raf);
+      else raf = requestAnimationFrame(draw);
+    });
+  })();
+
+  // ---- Console stream ----
+  (() => {
+    const el = document.getElementById('consoleStream');
+    if (!el) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const lines = [
+      { t: 'boot', msg: 'signal-meridian engagement runtime initialized' },
+      { t: 'auth', msg: 'verifying client access · scope = production · region = ap-southeast-2' },
+      { t: 'scan', msg: 'aws bill ingested · 8 services · 12 environments · 90d window' },
+      { t: 'find', msg: 'steady workloads detected: app · workers · CI · search · logs' },
+      { t: 'plan', msg: 'placement matrix → 6 move · 3 hybrid · 4 optimize · 2 keep' },
+      { t: 'risk', msg: 'flag → managed Postgres stays cloud · stateful, low cost-leverage' },
+      { t: 'exec', msg: 'wave 1 cutover · CI runners + workers → bare metal · zero downtime' },
+      { t: 'patch', msg: 'workflow shipped · quote intake · agent draft → human approve' },
+      { t: 'devrel', msg: 'cohort office hours · 14 teams · 7 unblocked · 3 milestones reviewed' },
+      { t: 'ok',    msg: 'service healthy · p95 = 41ms · monthly spend −53%' },
+    ];
+
+    const colors: Record<string, string> = {
+      boot: 'text-slate-400',
+      auth: 'text-sky-300',
+      scan: 'text-slate-300',
+      find: 'text-emerald-300',
+      plan: 'text-violet-300',
+      risk: 'text-amber-300',
+      exec: 'text-slate-200',
+      patch: 'text-sky-300',
+      devrel: 'text-fuchsia-300',
+      ok:    'text-signal',
+      note:  'text-slate-400 italic',
+    };
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const stamp = () => {
+      const d = new Date();
+      return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    };
+
+    const cursor = '<span class="console-cursor"></span>';
+    let buffer = '';
+    let i = 0;
+
+    const writeLine = async () => {
+      const { t, msg } = lines[i % lines.length];
+      const prefix = `<span class="text-slate-500">${stamp()}</span> <span class="${colors[t]}">${t.padEnd(6)}</span> <span class="text-slate-500">│</span> `;
+      const startLen = buffer.length;
+      buffer += prefix;
+      el.innerHTML = buffer + cursor;
+
+      if (reduce) {
+        buffer += msg + '\n';
+      } else {
+        for (let c = 0; c < msg.length; c++) {
+          buffer += msg[c];
+          el.innerHTML = buffer + cursor;
+          await new Promise((r) => setTimeout(r, 9 + Math.random() * 18));
+        }
+        buffer += '\n';
+      }
+      el.innerHTML = buffer + cursor;
+
+      // Trim if too long
+      const maxLines = 12;
+      const split = buffer.split('\n');
+      if (split.length > maxLines) {
+        buffer = split.slice(split.length - maxLines).join('\n');
+      }
+
+      i++;
+      void startLen;
+      setTimeout(writeLine, reduce ? 1200 : 650 + Math.random() * 800);
+    };
+
+    writeLine();
+  })();
+</script>

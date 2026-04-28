@@ -1,0 +1,116 @@
+---
+const rowA = [
+  'AWS → bare metal', 'Cost diagnostics', 'Hybrid architecture', 'Bare-metal Kubernetes',
+  'Colocation strategy', 'NAT + egress reduction', 'Database tuning', 'Backup + DR',
+  'Observability', 'CI/CD reduction', 'Reserved capacity', 'Storage lifecycle',
+];
+const rowB = [
+  'Customer portals', 'Quote + booking flows', 'Mobile-first ops tools', 'Admin dashboards',
+  'Support triage agents', 'Document extraction', 'Stripe / Xero', 'WhatsApp / SMS',
+  'CRM wiring', 'Payment workflows', 'Audit logs + permissions', 'Approval-based agents',
+];
+const rowC = [
+  'Dev relations', 'Office hours', 'Architecture review', 'Milestone review',
+  'Sample apps + SDKs', 'Hackathon support', 'Wallet + account flows', 'Indexing + RPC',
+  'Validator + node infra', 'Account abstraction', 'Smart-contract integration', 'Technical diligence',
+];
+---
+
+<section id="capabilities" class="relative py-24 sm:py-28 border-t border-line/60 overflow-hidden">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+      <div>
+        <p data-reveal class="font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
+          // capability surface
+        </p>
+        <h2
+          data-reveal
+          style="--reveal-delay: 80ms"
+          class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white"
+        >
+          What we actually do.
+        </h2>
+      </div>
+      <p data-reveal style="--reveal-delay: 140ms" class="max-w-md text-slate-400 leading-relaxed text-sm">
+        Three offers. One team. Senior coverage across infrastructure, product
+        and developer-facing technical work — picked deliberately around what we
+        execute well, not what is fashionable.
+      </p>
+    </div>
+  </div>
+
+  <div data-reveal style="--reveal-delay: 200ms" class="mt-12 marquee-mask">
+    <div class="marquee" style="--dur: 60s;">
+      <ul class="marquee-row" data-dir="left">
+        {[...rowA, ...rowA].map((t) => (
+          <li class="cap-chip">{t}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="marquee mt-3" style="--dur: 75s;">
+      <ul class="marquee-row" data-dir="right">
+        {[...rowB, ...rowB].map((t) => (
+          <li class="cap-chip cap-chip--alt">{t}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="marquee mt-3" style="--dur: 90s;">
+      <ul class="marquee-row" data-dir="left">
+        {[...rowC, ...rowC].map((t) => (
+          <li class="cap-chip">{t}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+  .marquee { overflow: hidden; }
+  .marquee-row {
+    display: flex;
+    gap: 0.6rem;
+    width: max-content;
+    will-change: transform;
+    animation: marquee-l var(--dur, 60s) linear infinite;
+  }
+  .marquee-row[data-dir='right'] { animation-name: marquee-r; }
+  .marquee:hover .marquee-row { animation-play-state: paused; }
+  @keyframes marquee-l { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marquee-r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+  .cap-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    background: rgba(15, 22, 32, 0.6);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: #cbd5e1;
+    white-space: nowrap;
+    transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+  }
+  .cap-chip::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 9999px;
+    background: var(--color-signal);
+    box-shadow: 0 0 8px rgba(94, 234, 212, 0.6);
+  }
+  .cap-chip--alt::before {
+    background: #38bdf8;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+  }
+  .cap-chip:hover {
+    border-color: rgba(94, 234, 212, 0.5);
+    background: rgba(94, 234, 212, 0.06);
+    color: #ffffff;
+  }
+  @media (prefers-reduced-motion: reduce) { .marquee-row { animation: none; } }
+</style>

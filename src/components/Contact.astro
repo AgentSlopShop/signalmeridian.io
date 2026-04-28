@@ -1,0 +1,92 @@
+---
+---
+
+<section id="contact" class="relative py-28 sm:py-36 border-t border-line/60 overflow-hidden">
+  <!-- Animated horizon line -->
+  <div aria-hidden="true" class="contact-horizon absolute inset-x-0 top-1/2 -translate-y-1/2 pointer-events-none"></div>
+
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style="background: radial-gradient(700px 350px at 50% 0%, rgba(94,234,212,0.12), transparent 60%);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-3xl px-5 sm:px-8 text-center">
+    <p data-reveal class="font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
+      // start a conversation
+    </p>
+    <h2
+      data-reveal
+      style="--reveal-delay: 80ms"
+      class="mt-3 text-3xl sm:text-5xl font-semibold tracking-tight text-white text-glow leading-[1.05]"
+    >
+      One short email.
+      <span class="block text-slate-400 font-light">A real reply from a real engineer.</span>
+    </h2>
+    <p data-reveal style="--reveal-delay: 140ms" class="mt-6 text-slate-400 leading-relaxed">
+      Tell us what is broken, blocked, or unclear — or what you are hoping to
+      build. We respond personally within one business day, and we are happy to
+      start with a small, clearly scoped piece of work.
+    </p>
+
+    <div data-reveal style="--reveal-delay: 200ms" class="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+      <a
+        href="mailto:hello@signalmeridian.io?subject=Engagement%20enquiry"
+        class="inline-flex items-center justify-center gap-2 rounded-md bg-signal px-6 py-3 text-sm font-semibold text-ink hover:bg-white transition-colors shadow-[0_0_0_1px_rgba(94,234,212,0.4),0_8px_32px_-8px_rgba(94,234,212,0.55)]"
+      >
+        hello@signalmeridian.io
+        <svg viewBox="0 0 16 16" fill="none" class="h-4 w-4"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a
+        href="mailto:hello@signalmeridian.io?subject=AWS%20cost%20review"
+        class="inline-flex items-center justify-center gap-2 rounded-md border border-line bg-ink-2/60 px-6 py-3 text-sm font-medium text-slate-200 hover:border-signal/50 hover:text-white transition-colors"
+      >
+        Request a cost review
+      </a>
+    </div>
+
+    <div data-reveal style="--reveal-delay: 280ms" class="mt-12 grid sm:grid-cols-3 gap-3 text-left">
+      {
+        [
+          ['Response', 'Within 1 business day'],
+          ['Scope', 'From single-day diagnostics to multi-month builds'],
+          ['Confidentiality', 'NDA-friendly. Sensitive infra handled carefully.'],
+        ].map(([k, v]) => (
+          <div class="rounded-lg border border-line bg-ink-2/60 p-4">
+            <div class="font-mono text-[10.5px] uppercase tracking-[0.2em] text-signal/80">{k}</div>
+            <div class="mt-1.5 text-sm text-slate-300 leading-relaxed">{v}</div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-horizon {
+    height: 1px;
+    background: linear-gradient(to right, transparent 0%, rgba(94,234,212,0.6) 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent, black, transparent);
+            mask-image: linear-gradient(to right, transparent, black, transparent);
+  }
+  .contact-horizon::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    width: 5px; height: 5px;
+    border-radius: 9999px;
+    background: var(--color-signal);
+    transform: translateX(-50%);
+    box-shadow: 0 0 18px rgba(94,234,212,0.85);
+    animation: contact-glide 7s ease-in-out infinite;
+  }
+  @keyframes contact-glide {
+    0%, 100% { left: 12%; }
+    50%      { left: 88%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .contact-horizon::after { animation: none; }
+  }
+</style>

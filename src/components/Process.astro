@@ -1,0 +1,193 @@
+---
+// Process — a single SVG path drawn as the user scrolls. Waypoints reveal
+// in sequence with terminal-style annotations. No card grid.
+const steps = [
+  {
+    k: 'phase 01',
+    t: 'Diagnose',
+    b: 'Read-only access, billing exports, architecture walkthrough, workflow audit, or codebase review — depending on the engagement. Output: a written read of where you actually are.',
+  },
+  {
+    k: 'phase 02',
+    t: 'Plan',
+    b: 'A specific, risk-rated proposal: what to do, what not to do, expected outcome, and the smallest safe first step. Conservative, likely, and aggressive scenarios.',
+  },
+  {
+    k: 'phase 03',
+    t: 'Execute',
+    b: 'Phased execution with rollback, monitoring, and runbooks. Senior hands on the work — no junior handoffs, no agency layers, no waiting through escalation chains.',
+  },
+  {
+    k: 'phase 04',
+    t: 'Hand back',
+    b: 'Verified outcomes, documented runbooks, monitoring dashboards, and a follow-up backlog. You leave more capable than when we started.',
+  },
+];
+---
+
+<section id="process" class="relative py-28 sm:py-36 border-t border-line/60 overflow-hidden">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="max-w-2xl">
+      <p data-reveal class="font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
+        // process
+      </p>
+      <h2
+        data-reveal
+        style="--reveal-delay: 80ms"
+        class="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-white"
+      >
+        Diagnose. Plan. Execute. Hand back.
+      </h2>
+      <p data-reveal style="--reveal-delay: 140ms" class="mt-4 text-slate-400 leading-relaxed">
+        We sell trust, seniority, and technical judgment — not staffing hours.
+        Every engagement starts with a small, clearly scoped piece of work so
+        you can assess capability and value before committing to anything
+        larger.
+      </p>
+    </div>
+
+    <div id="process-track" class="relative mt-20">
+      <!-- Drawn SVG path running down the left -->
+      <svg
+        viewBox="0 0 100 1000"
+        preserveAspectRatio="none"
+        class="absolute left-4 sm:left-8 top-0 h-full w-12 sm:w-16 pointer-events-none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="proc-grad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#5eead4" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.9" />
+          </linearGradient>
+        </defs>
+        <!-- Faint full path -->
+        <path
+          d="M 50 10 C 20 160, 80 320, 50 480 S 20 760, 50 990"
+          stroke="rgba(148,163,184,0.18)"
+          stroke-width="1.5"
+          fill="none"
+        />
+        <!-- Drawn path -->
+        <path
+          id="proc-line"
+          d="M 50 10 C 20 160, 80 320, 50 480 S 20 760, 50 990"
+          stroke="url(#proc-grad)"
+          stroke-width="2"
+          fill="none"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <ol class="relative space-y-20 sm:space-y-28 pl-16 sm:pl-28">
+        {
+          steps.map((s, i) => (
+            <li
+              class="proc-step relative"
+              data-index={i}
+              style={`--reveal-delay: ${i * 60}ms`}
+            >
+              <!-- Waypoint marker (positioned over the SVG path) -->
+              <span
+                class="proc-dot absolute -left-[58px] sm:-left-[82px] top-2 grid place-items-center"
+                aria-hidden="true"
+              >
+                <span class="block h-3.5 w-3.5 rounded-full bg-ink ring-1 ring-line">
+                  <span class="proc-dot-inner block h-full w-full rounded-full bg-signal scale-0 transition-transform duration-500 origin-center" />
+                </span>
+                <span class="proc-dot-ring absolute h-8 w-8 rounded-full border border-signal/40 scale-0 opacity-0 transition-all duration-700"></span>
+              </span>
+
+              <div class="proc-card">
+                <div class="font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
+                  {s.k}
+                </div>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                  {s.t}
+                </h3>
+                <p class="mt-3 max-w-xl text-slate-400 leading-relaxed">{s.b}</p>
+
+                <!-- Tiny terminal-style snippet under each step for character -->
+                <pre class="mt-5 max-w-xl font-mono text-[11.5px] leading-relaxed bg-ink-3/70 border border-line rounded-lg p-3 text-slate-400 overflow-hidden">
+<span class="text-slate-500">$</span> <span class="text-signal">sm</span> {(['diagnose --scope=infra', 'plan --risk=conservative', 'execute --wave=1 --rollback=ready', 'handoff --runbooks --dashboards'])[i]}
+<span class="text-slate-600">→</span> {(['cost map · placement matrix · risk register', 'target architecture · 30/60/90 plan · savings model', 'workloads migrated · monitoring active · zero downtime', 'verified outcomes · documented · trained internal team'])[i]}</pre>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  #proc-line {
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    will-change: stroke-dashoffset;
+    transition: stroke-dashoffset 120ms linear;
+  }
+  .proc-step {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .proc-step.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .proc-step.is-visible .proc-dot-inner {
+    transform: scale(1);
+    box-shadow: 0 0 14px rgba(94, 234, 212, 0.7);
+  }
+  .proc-step.is-visible .proc-dot-ring {
+    transform: scale(1);
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #proc-line { stroke-dashoffset: 0; transition: none; }
+    .proc-step { opacity: 1; transform: none; transition: none; }
+    .proc-dot-inner { transform: scale(1); }
+    .proc-dot-ring { opacity: 1; transform: scale(1); }
+  }
+</style>
+
+<script>
+  (() => {
+    const track = document.getElementById('process-track');
+    const line = document.getElementById('proc-line') as unknown as SVGPathElement | null;
+    if (!track || !line) return;
+
+    const total = 1200; // matches stroke-dasharray
+    const update = () => {
+      const rect = track.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 0 when track top hits viewport bottom; 1 when track bottom hits viewport top
+      const start = vh * 0.85;
+      const end = vh * 0.15;
+      const span = rect.height + (start - end);
+      const progressed = start - rect.top;
+      let p = progressed / span;
+      p = Math.max(0, Math.min(1, p));
+      line.style.strokeDashoffset = String(total - total * p);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+
+    // Reveal individual steps
+    const steps = track.querySelectorAll<HTMLElement>('.proc-step');
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).classList.add('is-visible');
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.25, rootMargin: '0px 0px -10% 0px' }
+    );
+    steps.forEach((s) => io.observe(s));
+  })();
+</script>
