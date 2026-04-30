@@ -1,5 +1,5 @@
 ---
-// Offer 3 — Web3 technical execution + developer-program support
+// Offer 3 · Web3 technical execution + developer-program support
 // Unique visual: live force-graph "constellation" rendered to <canvas>.
 // A central foundation node connects to cohort/builder nodes with pulses
 // running along edges. Drifts and reacts to mouse.
@@ -27,7 +27,7 @@ const services = [
       <div class="lg:col-span-5">
         <div data-reveal class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
           <span class="h-px w-8 bg-signal/60"></span>
-          Offer · 03
+          Developer relations
         </div>
         <h2
           data-reveal
@@ -41,7 +41,7 @@ const services = [
           For protocol foundations, ecosystem funds, grant programs and
           accelerators: senior technical execution that crosses code, infra,
           product and developer relations. We act as the technical layer behind
-          your program — so non-technical staff have credible answers and
+          your program, so non-technical staff have credible answers and
           builder teams have someone who can actually unblock them.
         </p>
 
@@ -61,7 +61,7 @@ const services = [
         </div>
 
         <p data-reveal style="--reveal-delay: 260ms" class="mt-7 text-xs text-slate-500 leading-relaxed border-l border-line/80 pl-4">
-          Direct experience across multiple blockchain ecosystems — developer
+          Direct experience across multiple blockchain ecosystems. Developer
           relations, grant programs, wallet and account flows, indexing, RPC
           and node infrastructure, and cloud-to-bare-metal migration for web3
           infrastructure.
@@ -96,27 +96,11 @@ const services = [
             </div>
             <div class="relative aspect-[16/11] sm:aspect-[16/10]">
               <canvas id="o3-graph" class="absolute inset-0 w-full h-full"></canvas>
-              <!-- Legend overlay -->
-              <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between font-mono text-[10.5px] text-slate-400">
-                <div class="flex flex-col gap-1">
-                  <span class="inline-flex items-center gap-1.5">
-                    <span class="h-2 w-2 rounded-full bg-signal shadow-[0_0_8px_#5eead4]"></span>
-                    foundation / program
-                  </span>
-                  <span class="inline-flex items-center gap-1.5">
-                    <span class="h-2 w-2 rounded-full bg-sky-300/80"></span>
-                    builder / cohort team
-                  </span>
-                  <span class="inline-flex items-center gap-1.5">
-                    <span class="h-2 w-2 rounded-full bg-amber-300/70"></span>
-                    blocked · needs review
-                  </span>
-                </div>
-                <div class="hidden sm:flex flex-col items-end gap-0.5">
-                  <span><span class="text-slate-500">teams tracked</span> <span id="o3-teams" class="text-slate-200">14</span></span>
-                  <span><span class="text-slate-500">milestones reviewed</span> <span id="o3-ms" class="text-slate-200">42</span></span>
-                  <span><span class="text-slate-500">unblocked this week</span> <span id="o3-unblock" class="text-signal">7</span></span>
-                </div>
+              <!-- Stats overlay -->
+              <div class="absolute bottom-3 right-3 flex flex-col items-end gap-0.5 font-mono text-[10.5px] text-slate-400">
+                <span><span class="text-slate-500">teams tracked</span> <span id="o3-teams" class="text-slate-200">78</span></span>
+                <span><span class="text-slate-500">milestones reviewed</span> <span id="o3-ms" class="text-slate-200">251</span></span>
+                <span><span class="text-slate-500">unblocked this week</span> <span id="o3-unblock" class="text-signal">7</span></span>
               </div>
             </div>
           </div>

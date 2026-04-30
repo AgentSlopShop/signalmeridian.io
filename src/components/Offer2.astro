@@ -1,5 +1,5 @@
 ---
-// Offer 2 — App UI/UX revamps + agent integrations
+// Offer 2 · App UI/UX revamps + agent integrations
 // Unique visual: SVG dataflow diagram. Inputs (call/email/PDF/spreadsheet)
 // flow through an agent-assisted hub into structured outputs (CRM/Stripe/etc).
 // Animated particles travel along edges; nodes pulse.
@@ -94,7 +94,7 @@ const outputs = [
                 {
                   outputs.map((n) => (
                     <path
-                      d={`M 360 160 C 440 160, 490 ${n.y + 20}, 580 ${n.y + 20}`}
+                      d={`M 360 160 C 440 160, 480 ${n.y + 20}, 560 ${n.y + 20}`}
                       stroke="url(#o2-edge)"
                       stroke-width="1.2"
                       fill="none"
@@ -124,7 +124,7 @@ const outputs = [
                         dur={`${2.4 + i * 0.2}s`}
                         repeatCount="indefinite"
                         begin={`${1.1 + i * 0.35}s`}
-                        path={`M 360 160 C 440 160, 490 ${n.y + 20}, 580 ${n.y + 20}`}
+                        path={`M 360 160 C 440 160, 480 ${n.y + 20}, 560 ${n.y + 20}`}
                       />
                     </circle>
                   ))
@@ -145,9 +145,9 @@ const outputs = [
                 <!-- Output nodes -->
                 {
                   outputs.map((n) => (
-                    <g transform={`translate(580, ${n.y})`}>
-                      <rect width="100" height="40" rx="8" fill="#0a0f17" stroke="rgba(94,234,212,0.35)" />
-                      <text x="50" y="24" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">
+                    <g transform={`translate(560, ${n.y})`}>
+                      <rect width="130" height="40" rx="8" fill="#0a0f17" stroke="rgba(94,234,212,0.35)" />
+                      <text x="65" y="24" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">
                         {n.label}
                       </text>
                     </g>
@@ -161,10 +161,10 @@ const outputs = [
                     <animate attributeName="r" values="46;58;46" dur="3.6s" repeatCount="indefinite" />
                     <animate attributeName="stroke-opacity" values="0.4;0;0.4" dur="3.6s" repeatCount="indefinite" />
                   </circle>
-                  <text x="360" y="176" text-anchor="middle" fill="#5eead4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">
+                  <text x="360" y="172" text-anchor="middle" fill="#5eead4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">
                     AGENT
                   </text>
-                  <text x="360" y="192" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="9">
+                  <text x="360" y="194" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="9">
                     + human approval
                   </text>
                 </g>
@@ -194,7 +194,7 @@ const outputs = [
       <div class="lg:col-span-5 order-1 lg:order-2">
         <div data-reveal class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal/80">
           <span class="h-px w-8 bg-signal/60"></span>
-          Offer · 02
+          Agentic flows
         </div>
         <h2
           data-reveal
@@ -206,14 +206,14 @@ const outputs = [
         </h2>
         <p data-reveal style="--reveal-delay: 140ms" class="mt-5 text-slate-400 leading-relaxed">
           Modern customer portals, mobile-first internal tools, booking and quote
-          flows, support triage, and intake automation — wired into the systems
-          your team already uses. Not a fresh coat of paint. A working MVP with
-          real backend behaviour.
+          flows, support triage, and intake automation. Wired into the systems
+          your team already uses. Not just a fresh coat of paint. A working MVP
+          with real backend behaviour.
         </p>
 
         <ul data-reveal style="--reveal-delay: 200ms" class="mt-7 grid grid-cols-2 gap-2 font-mono text-[11.5px]">
           {
-            ['Stripe', 'Xero / MYOB', 'HubSpot', 'WhatsApp / SMS', 'ServiceM8', 'Shopify', 'Google / M365', 'Custom APIs'].map((t) => (
+            ['Stripe', 'Xero / MYOB', 'HubSpot', 'WhatsApp / SMS', 'CRMs', 'Shopify', 'Google / M365', 'Custom APIs'].map((t) => (
               <li class="rounded border border-line bg-ink-2/60 px-2.5 py-1.5 text-slate-300 hover:border-signal/40 hover:text-white transition-colors">
                 {t}
               </li>
